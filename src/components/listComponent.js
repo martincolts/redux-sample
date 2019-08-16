@@ -12,15 +12,15 @@ const List = (props) => {
                     <button onClick={() => props.deleteElement(element)}>x</button>
                 </div>
             )
-        });        
+        });
     } else return null;
-}
+};
 
 const mapStateToProps = state => {
     return {
         elements: state.elements
     }
-}
+};
 
 const mapDispatchToProps = dispatch => {
     return {
@@ -28,6 +28,6 @@ const mapDispatchToProps = dispatch => {
             dispatch(deleteElement(element))
         }
     }
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(List);

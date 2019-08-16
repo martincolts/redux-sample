@@ -1,33 +1,50 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { addElement } from '../actions/actions';
 import { connect } from 'react-redux';
+import Button from "@material-ui/core/Button";
+import { makeStyles } from "@material-ui/core/styles";
 
-class Form extends React.Component {
-    constructor(props){
-        super(props);
+const useStyles = makeStyles(theme => ({
+    button: {
+        margin: theme.spacing(1),
+    }
+}));
 
-        this.state = {
-            name: ""
+const Form = (props) => {
+    const { addElement } = props;
+    const style = useStyles();
+    const {inputs, handleInputChange, handleSubmit} = useForm();
+
+    return (
+        <div>
+            <label>Name: </label>
+            <input name="name" value={inputs.name} onChange={handleInputChange} required/>
+            <Button variant="contained" color="primary" className={style.button} onClick={() => {addElement(inputs.name)}}>Add element</Button>
+        </div>
+    )
+};
+
+const useForm = (callback) => {
+    const [inputs, setInputs] = useState({});
+
+    const handleSubmit = (event) => {
+        if (event) {
+            event.preventDefault();
         };
+        callback();
+    }; // I think that this function is to handle the required fields in the form
 
-        this.handleInput = this.handleInput.bind(this);
-    }
+    const handleInputChange = (event) => {
+        event.persist();
+        setInputs(inputs => ({...inputs, [event.target.name]: event.target.value}));
+    };
 
-    handleInput (e){
-        this.setState({name: e.target.value});
-    }
-
-    render (){
-        const { addElement } = this.props;
-        return (
-            <div>
-                <label>Name: </label>
-                <input name="name" value={this.state.name} onChange={this.handleInput}></input>
-                <button onClick={() => addElement(this.state.name)}>Add element</button>
-            </div>
-        )
-    }
-}
+    return {
+        handleInputChange,
+        inputs,
+        handleSubmit
+    };
+};
 
 const mapDispatchToProps = dispatch => {
     return {
@@ -35,6 +52,6 @@ const mapDispatchToProps = dispatch => {
             dispatch(addElement(element));
         }
     }
-}
+};
 
 export default connect (null,mapDispatchToProps)(Form)
